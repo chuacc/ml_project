@@ -6,7 +6,7 @@ import pandas as pd
 from src.execption import CustomExecption
 import dill
 from sklearn.metrics import r2_score
-
+from sklearn.model_selection import GridSearchCV
 
 
 def save_object(file_path, obj):
@@ -22,21 +22,21 @@ def save_object(file_path, obj):
         raise CustomExecption(e, sys)
     
 
-def evaluate_models(X_train, y_train,X_test,y_test,models):
+def evaluate_models(X_train, y_train,X_test,y_test,models, param):
     try:
         report = {}
 
         for i in range(len(list(models))):
             model = list(models.values())[i]
-            # para=param[list(models.keys())[i]]
+            para=param[list(models.keys())[i]]
 
-            # gs = GridSearchCV(model,para,cv=3)
-            # gs.fit(X_train,y_train)
+            gs = GridSearchCV(model,para,cv=3)
+            gs.fit(X_train,y_train)
 
-            # model.set_params(**gs.best_params_)
-            # model.fit(X_train,y_train)
+            model.set_params(**gs.best_params_)
+            model.fit(X_train,y_train)
 
-            model.fit(X_train, y_train)  # Train model
+            # model.fit(X_train, y_train)  # Train model
 
             y_train_pred = model.predict(X_train)
 
